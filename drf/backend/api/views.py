@@ -1,22 +1,19 @@
 from django.shortcuts import render
 from django.http import JsonResponse
+from product.models import Product
 import json
+from django.forms.models import model_to_dict
+from rest_framework.response import Response
+from rest_framework.decorators import api_view
 
 # Create your views here.
-
-def hello(request, *args,**kwargs):
-    body = request.body
+@api_view(["GET","POST"])
+def api_home(request, *args,**kwargs):
+    """DRF api view"""
+    model_data = Product.objects.all().order_by("?").first()
     data = {}
-    
-    try:
-        data = json.loads(body)
-    except:
-        return JsonResponse({"Message":"Data recieved failed"})
-    
-    print(data)
-    data['headers'] = request.headers
-    
-    data['content_type'] = request.content_type
-    print(data)
-    return JsonResponse({"Message":"Data recieved"})
+    if model_data:
+       data = model_to_dict(model_data,fields=['id','title','price'])
+        
+    return Response(data)
     
