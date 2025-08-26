@@ -17,4 +17,7 @@ class ProductSerializer(serializers.ModelSerializer):
             ]
         
     def get_my_discount(self,obj):
-        return obj.my_discount()
+        try:
+            return obj.my_discount()
+        except:
+            return None
